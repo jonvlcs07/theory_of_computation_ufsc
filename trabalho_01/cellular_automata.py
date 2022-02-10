@@ -5,8 +5,9 @@ Trabalho 01 Teoria da Computação
 Wish_list:
     - Cellular automata (Class):
         - Init
-        - Sum n closest elements
+        - Sum d closest elements
         - Next automata.
+
     - Circular array data structure (Class)
         - Cicular distance
         - Get elements at distance d
@@ -54,51 +55,69 @@ ca1 = circular_array([5, 3, 1, 1])
 ca1.array_
 
 
-# %% 
+# %% Circular distance
 print("1.1 Circular distance")
 
+# circular_distance
 # list -> int -> list
-test_circular_array = [1, 2, 1,
-                       0, 1, 2]
-element_test = 1
-
-expected_distance_array_1 = [0, 1, 2,
-                             3, 2, 1]
 
 n = len(expected_distance_array_1)
 
-index_array = np.arange(start=1, stop=n, step=1)
+index_array = np.arange(start=1, stop=n+1, step=1)
 
 forward_distance = np.abs(element_test
                           - index_array)
 backwards_distance = n - forward_distance
+
 print(f'Forward distance {forward_distance}')
 print(f'Backwards distance {backwards_distance}')
 
-concat = np.min(np.ndarray([forward_distance, backwards_distance]))
-print(concat)
-
-np.array([forward_distance, backwards_distance])
+np.min(np.array([forward_distance,
+                 backwards_distance]),
+       axis=0)
 
 
 def circular_distance_array_from_idx(array: list,
                                      indx: int) -> list:
     """Calculate circular distance array from index."""
 
-
     n = len(array)
-    index_array = np.arange(start=1, stop=n, step=1)
 
-    return None
+    array_indx = indx + 1
+    index_array = np.arange(start=1, stop=n+1, step=1)
+    print(f'Index array {index_array}')
 
-    
-    
+    forward_distance = np.abs(array_indx
+                              - index_array)
+
+    backwards_distance = n - forward_distance
+
+    print(f'Forward distance {forward_distance}')
+    print(f'Backwards distance {backwards_distance}')
+
+    circular_distance = np.min(np.array([forward_distance,
+                                         backwards_distance]),
+                               axis=0)
+
+    return circular_distance
 
 
+test_circular_array = [1, 2, 1,
+                       0, 1, 2]
+element_test_0 = 0
+
+expected_distance_array_0 = [0, 1, 2,
+                             3, 2, 1]
+
+element_test_1 = 1
+expected_distance_array_1 = [1, 0, 1,
+                             2, 2, 1]
+circular_distance_array_from_idx(array=test_circular_array,
+                                 indx=element_test_1)
 
 
-
-
-
-
-
+element_test_2 = 3
+expected_distance_array_2 = [0, 1, 2,
+                             3, 2, 1]
+circular_distance_array_from_idx(array=test_circular_array,
+                                 indx=element_test_2)
