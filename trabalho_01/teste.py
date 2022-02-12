@@ -17,7 +17,6 @@ Wish_list:
 
 
 # %% Tests and definitions
-import string
 import numpy as np
 
 
@@ -59,9 +58,12 @@ def circular_distance_array_from_idx(array: list,
     return circular_distance
 
 # %% Read the input file
-input = open('cell.in', 'r')
+
+input = open('cell1.in', 'r')
 input_data = input.readlines()
+
 # %% Get params
+
 parameters = input_data[0].replace('\n', '').split(' ')
 
 modular = int(parameters[1])
@@ -69,6 +71,7 @@ d = int(parameters[2])
 i = int(parameters[3].replace('\n', ''))
 
 # %% Get the automaton
+
 automaton = np.array([int(numeric_string) for numeric_string in input_data[1].split(' ')])
 
 def get_d_environment_from_index(array: np.array,
@@ -102,9 +105,9 @@ for key in range(i):
 
 result_string = ' '.join(np.array([str(int(numeric)) for numeric in result_array]))
 print(result_string)
-output = open('cell.out', 'w+')
-output.write(result_string)
+
+
+with open('cell.out', 'w+') as f:
+    f.write(result_string)
 
 print(f'Result array: {result_array}')
-
-

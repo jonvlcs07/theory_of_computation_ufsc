@@ -1,5 +1,5 @@
 '''
-Trabalho 01 Teoria da Computação
+Trabalho 01 Teoria da Computação.
 
 
 Wish_list:
@@ -81,33 +81,54 @@ def circular_distance_array_from_idx(array: list,
     return circular_distance
 
 
-test_circular_array = np.array([1, 2, 1,
-                                0, 1, 2])
+# %% Circular distance native python
+
+def circular_distance_py(array: list,
+                         indx: int) -> list:
+    """Calculate circular distance array from index
+       in pure python."""
+
+    n = len(array)
+
+    array_indx = indx + 1
+    index_array = list(range(1, n+1, 1))
+
+    forward_distance = [abs(array_indx - i) for i in index_array]
+    backwards_distance = [n - i for i in forward_distance]
+
+    circular_distance = ([min([i, j]) for i, j
+                        in zip(forward_distance, backwards_distance)])
+
+    return circular_distance
+
+
+test_circular_array = [1, 2, 1,
+                       0, 1, 2]
 element_test_0 = 0
 expected_distance_array_0 = [0, 1, 2,
                              3, 2, 1]
 
-distance_0 = circular_distance_array_from_idx(array=test_circular_array,
+distance_0 = circular_distance_py(array=test_circular_array,
                                               indx=element_test_0)
 print(f'Distance from position 0: {distance_0}')
-assert all(distance_0 == expected_distance_array_0)
+assert distance_0 == expected_distance_array_0
 
 element_test_1 = 1
 expected_distance_array_1 = [1, 0, 1,
                              2, 3, 2]
-distance_1 = circular_distance_array_from_idx(array=test_circular_array,
+distance_1 = circular_distance_py(array=test_circular_array,
                                               indx=element_test_1)
 print(f'Distance from position 1: {distance_1}')
-assert all(distance_1 == expected_distance_array_1)
+assert distance_1 == expected_distance_array_1
 
 element_test_2 = 2
 expected_distance_array_2 = [2, 1, 0,
                              1, 2, 3]
 
-distance_2 = circular_distance_array_from_idx(array=test_circular_array,
+distance_2 = circular_distance_py(array=test_circular_array,
                                               indx=element_test_2)
 print(f'Distance from position 2: {distance_2}')
-assert all(distance_2 == expected_distance_array_2)
+assert distance_2 == expected_distance_array_2
 
 
 # %% Get elements at circular distance of d from index i
@@ -124,7 +145,7 @@ distance_0 = circular_distance_array_from_idx(array=test_circular_array,
 
 
 print(distance_0)
-distance_mask = distance_0 <= d
+distance_mask = distance_0 <= d_test
 d_environment = test_circular_array[distance_mask]
 
 print(distance_mask)
@@ -143,12 +164,37 @@ def get_d_environment_from_index(array: np.array,
 
     return d_environment
 
+# %% closest neighbours pure python
+def get_d_environment_from_index(array: np.array,
+                                 index: int,
+                                 distance: int) -> np.array:
+    """Get closest n elements from a circular array."""
+
+    distance_array = circular_distance_array_from_idx(array=array,
+                                                      indx=index)
+    distance_mask = distance_array <= distance
+    d_environment = test_circular_array[distance_mask]
+
+    return d_environment
+
+def get_d_environment_py(array: list,
+                         index: int,
+                         d: int) -> list:
+    """Get closest n elements from a circular array."""
+
+    distances = circular_distance_py(array, index)
+
+    d_environment = ([element for element, distance in zip(array, distances)
+                              if distance <= d])
+
+    return d_environment
 
     
-neighbours_from_0 = get_d_environment_from_index(array=test_circular_array,
-                                                 index=i_test_0,
-                                                 distance=d_test)
+neighbours_from_0 = get_d_environment_py(array=test_circular_array,    
+                                         index=i_test_0,
+                                         d=d_test)
 
-assert == d_enviroment
+assert neighbours_from_0 == expected_neighbours
+
 
 
