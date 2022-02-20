@@ -130,7 +130,7 @@ class DynamicEnvironmentSum:
                           index: int) -> list:
         """Get closest n elements from a circular array."""
 
-        distances = _circular_distance(array, index)
+        distances = self._circular_distance(array, index)
 
         d_environment = ([element for element, distance in zip(array, distances)
                                   if distance <= self.d])
@@ -143,7 +143,7 @@ class DynamicEnvironmentSum:
                         index: int) -> int:
         """Module sum elements from environment"""
 
-        d_environment = _get_d_environment(array, index, self.d)
+        d_environment = self._get_d_environment(array, index)
         enviroment_module_sum = sum(d_environment) % self.modulo
 
         return enviroment_module_sum
@@ -155,26 +155,65 @@ class DynamicEnvironmentSum:
         """Module sum elements from environment"""
 
 
-        if (index, tuple(array)) in cache.keys():
-            next_cell = cache[index, tuple(array)]
+        if (index, tuple(array)) in self.cache.keys():
+            next_cell = self.cache[(index, tuple(array))]
 
         else:
-            next_cell = environment_sum(array, index, self.d, self.modulo)
+            next_cell = self._environment_sum(array, index)
+            self.cache[(tuple(array), index)] = next_cell
 
         return next_cell
 
+# %% Testing
+index = 2
+array = [1, 2, 0, 1, 1]
+ds = DynamicEnvironmentSum(modulo=2,
+                           d=3)
+
+ds._dynamic_environment_sum(array=array, index=2)
+ds._dynamic_environment_sum(array=array, index=3)
+ds._dynamic_environment_sum(array=array, index=4)
 
 
+# %% Implementation
 
+# %% Read the input file
 
+input = open('cell.in', 'r')
+input_data = input.readlines()
 
+# %% Get params
 
+parameters = input_data[0].replace('\n', '').split(' ')
 
+modular = int(parameters[1])
+d = int(parameters[2])
+i = int(parameters[3].replace('\n', ''))
 
+# %% Get the automaton
+automaton =[int(numeric_string) for numeric_string in input_data[1].split(' ')]
+result_array = automaton
 
+# %% Get the automaton
 
+ds = DynamicEnvironmentSum(modulo=modular,
+                           d=d)
 
+current_automaton = automaton
 
+for key in range(i):
+    print('--------------------')
+    # Set the aux as an empty array
+    aux = []
+    for index in range(len(automaton)):
+        sum_ = ds._dynamic_environment_sum(current_automaton, index)
+        aux.append(sum_)
+        print(f'Neighbours from position {index}: {sum_}')
 
+    current_automaton = aux
 
+result_string = ' '.join([str(int(numeric)) for numeric in result_array])
+print(result_string)
 
+with open('cell.out', 'w+') as f:
+    f.write(result_string)
