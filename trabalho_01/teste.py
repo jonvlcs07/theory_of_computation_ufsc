@@ -1,39 +1,3 @@
-'''
-Trabalho 01 Teoria da Computação
-
-
-Wish_list:
-    - Cellular automata (Class):
-        - Init
-        - Sum d closest elements
-        - Next automata.
-
-    - Circular array data structure (Class)
-        - Cicular distance
-        - Get elements at distance d
-
-
-'''
-
-
-# %% Tests and definitions
-
-
-# %% 
-print("1. Making the data structure")
-class circular_array:
-    """Circular array data structure."""
-
-    def __init__(self, array: list):
-        self.array_ = array
-
-
-ca1 = circular_array([5, 3, 1, 1])
-
-
-
-ca1.array_
-
 
 
 # list -> int -> np.array
@@ -56,12 +20,10 @@ def circular_distance_py(array: list,
     return circular_distance
 
 # %% Read the input file
-
 input = open('cell.in', 'r')
 input_data = input.readlines()
 
 # %% Get params
-
 parameters = input_data[0].replace('\n', '').split(' ')
 
 modular = int(parameters[1])
@@ -69,7 +31,6 @@ d = int(parameters[2])
 i = int(parameters[3].replace('\n', ''))
 
 # %% Get the automaton
-
 automaton =[int(numeric_string) for numeric_string in input_data[1].split(' ')]
 
 def get_d_environment_py(array: list,
@@ -84,17 +45,21 @@ def get_d_environment_py(array: list,
 
     return d_environment
 
+#initial automaton
 result_array = automaton
 
+#For each step, set the current state
 for key in range(i):
-    print('--------------------')
     # Set the aux as an empty array
     aux = []
+    # For each position in the automaton, get the new value
     for index in range(len(automaton)):
         print('Current automaton ', result_array)
+        # Gete the d closest neighbors
         neighbours = get_d_environment_py(array=result_array,
                                           index=index,
                                           d=d)
+        # If exists at least one neighbor, set the value for the current position
         if(len(neighbours) > 0):
             aux.append(sum(neighbours) % modular)
             print(f'Neighbours from position {index}: {neighbours}')
@@ -103,7 +68,6 @@ for key in range(i):
 
 result_string = ' '.join([str(int(numeric)) for numeric in result_array])
 print(result_string)
-
 
 with open('cell.out', 'w+') as f:
     f.write(result_string)
