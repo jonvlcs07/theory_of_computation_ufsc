@@ -24,7 +24,7 @@ class DynamicEnvironmentSum:
         backwards_distance = [n - i for i in forward_distance]
 
         circular_distance = ([min([i, j]) for i, j
-                            in zip(forward_distance, backwards_distance)])
+                             in zip(forward_distance, backwards_distance)])
 
         return circular_distance
 
@@ -41,6 +41,11 @@ class DynamicEnvironmentSum:
 
         return d_environment
 
+    def _findSum(self, arr, N):
+         if len(arr)== 1:
+            return arr[0]
+         else:
+            return arr[0]+self._findSum(arr[1:], N)
 
     def _environment_sum(self,
                         array: list,
@@ -48,7 +53,9 @@ class DynamicEnvironmentSum:
         """Module sum elements from environment"""
 
         d_environment = self._get_d_environment(array, distances)
-        enviroment_module_sum = sum(d_environment) % self.modulo
+        N = len(d_environment)
+        enviroment_module_sum = (self._findSum(d_environment, N)
+                                 % self.modulo)
 
         return enviroment_module_sum
 
@@ -68,7 +75,6 @@ class DynamicEnvironmentSum:
 
         return next_cell
 
-
 input = open('cell.in', 'r')
 input_data = input.readlines()
 
@@ -84,6 +90,8 @@ result_array = automaton
 ds = DynamicEnvironmentSum(modulo=modular,
                            d=d)
 
+ # Return sum of elements in A[0..N-1]
+ # using recursion.
 current_automaton = automaton
 
 automatonCache = {}
@@ -92,24 +100,19 @@ distances = {}
 for key in range(i):
     # print('--------------------')
     # Set the aux as an empty array
-    if (tuple(current_automaton)) in automatonCache.keys():
-        current_automaton = automatonCache[(tuple(current_automaton))]
-        continue
-
     aux = []
     for index in range(len(automaton)):
         if (index not in distances.keys()):
             distances[index] = ds._circular_distance(current_automaton, index)
-        #print(distances[index])
         sum_ = ds._dynamic_environment_sum(current_automaton, index, distances[index])
         aux.append(sum_)
-        # print(f'Neighbours from position {index}: {sum_}')
-    
+        print(f'Neighbours from position {index}: {sum_}')
+
     automatonCache[(tuple(current_automaton))] = aux
     current_automaton = aux
 
 result_string = ' '.join([str(int(numeric)) for numeric in current_automaton])
-# print(result_string)
+print(result_string)
 
 with open('cell.out', 'w+') as f:
     f.write(result_string)
