@@ -58,7 +58,6 @@ class DynamicEnvironmentSum:
                                  index: int) -> int:
         """Module sum elements from environment"""
 
-
         if (tuple(array), index) in self.cache.keys():
             next_cell = self.cache[(tuple(array), index)]
 
@@ -86,15 +85,22 @@ ds = DynamicEnvironmentSum(modulo=modular,
 
 current_automaton = automaton
 
+automatonCache = {}
+
 for key in range(i):
     # print('--------------------')
     # Set the aux as an empty array
+    if (tuple(current_automaton)) in automatonCache.keys():
+        current_automaton = automatonCache[(tuple(current_automaton))]
+        continue
+
     aux = []
     for index in range(len(automaton)):
         sum_ = ds._dynamic_environment_sum(current_automaton, index)
         aux.append(sum_)
         # print(f'Neighbours from position {index}: {sum_}')
-
+    
+    automatonCache[(tuple(current_automaton))] = aux
     current_automaton = aux
 
 result_string = ' '.join([str(int(numeric)) for numeric in current_automaton])
@@ -102,5 +108,3 @@ result_string = ' '.join([str(int(numeric)) for numeric in current_automaton])
 
 with open('cell.out', 'w+') as f:
     f.write(result_string)
-
-
