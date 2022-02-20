@@ -31,10 +31,10 @@ class DynamicEnvironmentSum:
 
     def _get_d_environment(self,
                           array: list,
-                          index: int) -> list:
+                          distances: list) -> list:
         """Get closest n elements from a circular array."""
 
-        distances = self._circular_distance(array, index)
+        #distances = self._circular_distance(array, index)
 
         d_environment = ([element for element, distance in zip(array, distances)
                                   if distance <= self.d])
@@ -44,10 +44,10 @@ class DynamicEnvironmentSum:
 
     def _environment_sum(self,
                         array: list,
-                        index: int) -> int:
+                        distances: list) -> int:
         """Module sum elements from environment"""
 
-        d_environment = self._get_d_environment(array, index)
+        d_environment = self._get_d_environment(array, distances)
         enviroment_module_sum = sum(d_environment) % self.modulo
 
         return enviroment_module_sum
@@ -55,14 +55,15 @@ class DynamicEnvironmentSum:
 
     def _dynamic_environment_sum(self,
                                  array: list,
-                                 index: int) -> int:
+                                 index: int,
+                                 distances: list) -> int:
         """Module sum elements from environment"""
 
         if (tuple(array), index) in self.cache.keys():
             next_cell = self.cache[(tuple(array), index)]
 
         else:
-            next_cell = self._environment_sum(array, index)
+            next_cell = self._environment_sum(array, distances)
             self.cache[(tuple(array), index)] = next_cell
 
         return next_cell
@@ -86,6 +87,7 @@ ds = DynamicEnvironmentSum(modulo=modular,
 current_automaton = automaton
 
 automatonCache = {}
+distances = {}
 
 for key in range(i):
     # print('--------------------')
@@ -96,7 +98,10 @@ for key in range(i):
 
     aux = []
     for index in range(len(automaton)):
-        sum_ = ds._dynamic_environment_sum(current_automaton, index)
+        if (index not in distances.keys()):
+            distances[index] = ds._circular_distance(current_automaton, index)
+        #print(distances[index])
+        sum_ = ds._dynamic_environment_sum(current_automaton, index, distances[index])
         aux.append(sum_)
         # print(f'Neighbours from position {index}: {sum_}')
     
